@@ -1,0 +1,154 @@
+<!doctype html>
+<?php  //var_dump($approved); exit; ?>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><?php echo $_SESSION['pageTitle']; ?></title>
+    <link rel="icon" href="<?php echo base_url() ?>assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/plugins/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/plugins/dropify/css/dropify.min.css">
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/plugins/summernote/dist/summernote.css" />
+    <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/style.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+    <style>
+        .blink_me {
+            animation: blinker 3s linear infinite;
+            font-weight: bolder;
+            color: brown;
+            text-decoration: underline;
+        }
+
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .num {
+            font-size: 28px;
+            font-weight: bolder;
+            text-align: center;
+        }
+
+        .per {
+            font-size: 18px;
+            font-weight: bolder;
+            text-align: center;
+        }
+
+        span b {
+            text-transform: uppercase;
+        }
+        thead th, tfoot th{
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body class="font-muli right_tb_toggle <?php echo " " . $_SESSION['theme_mode']; ?>">
+    <div class="page-loader-wrapper">
+        <div class="loader"></div>
+    </div>
+    <div id="main_content">
+        <?php
+        $this->load->view('incs/header');
+        $this->load->view('incs/lside');
+        ?>
+        <div class="page">
+            <?php //$this->load->view('incs/pageheader'); ?>
+            <div class="section-body">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center ">
+                        <div class="header-action">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-body mt-1">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-body">
+                            <div>
+                                <?php if($approved[0]->status == "Paid"){?>
+                                <a href="<?php echo site_url('accomodations/approved/'.$approved[0]->hostelid.'/Pending')?>" class="float-left pl-1 text-danger">
+                                    <i class="fa fa-file-pdf"></i> Unpaid List
+                                </a>
+                                <a href="<?php echo site_url('accomodations/no_remita_record') ?>" class="float-center pl-5 text-danger">
+                                     <i class="fa fa-file-pdf"></i>
+                                    Remita Not Generated
+                                    </a>
+                                <?php }else{ ?>
+                                <a href="<?php echo site_url('accomodations/approved/'.$approved[0]->hostelid.'/Paid')?>" class="float-left pl-1 text-success">
+                                    <i class="fa fa-file-pdf"></i> Paid List
+                                </a>
+                                <?php } ?>
+                                <a href="<?php echo site_url('accomodations/index')?>" class="float-right pr-1">
+                                    <i class="fa fa-arrow-left"></i> Back
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 p-1">
+                                    <h4 class="card text-center p-2">Approved Hostel Allocation for <?php echo $approved[0]->hostelname." - [".$approved[0]->hostelfor."] - ".$approved[0]->location ?></h4>
+                                </div>
+                                <div class="col-md-12 col-sm-12 pt-1">
+                                    <div class="table-responsive" style="width:100%">
+                                        <table class="table table-hover js-basic-example dataTable table-striped table_custom border-style spacing5">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align:left; font-weight:bolder; color:#000">#</th>
+                                                    <th style="text-align:left; font-weight:bolder; color:#000">Reg No.</th>
+                                                    <th style="text-align:left; font-weight:bolder; color:#000">FullName</th>
+                                                    <th style="text-align:left; font-weight:bolder; color:#000">Bedspace</th>
+                                                    <th style="text-align:left; font-weight:bolder; color:#000">Room</th>
+                                                    <th style="text-align:left; font-weight:bolder; color:#000">Program</th>
+                                                    <th style="text-align:left; font-weight:bolder; color:#000">Level</th>
+                                                     <th style="text-align:left; font-weight:bolder; color:#000">Date Reserved</th>
+                                                    <th style="text-align:left; font-weight:bolder; color:#000">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php $i = 1;foreach ($approved as $row) { ?>
+                                                    <tr>
+                                                        <td><?php echo $i++ ?></td>
+                                                        <td><?php echo $row->pnumber ?></td>
+                                                        <td><?php echo strtoupper($row->surname).", ".ucwords(strtolower($row->firstname." ".$row->othername)); ?></td>
+                                                        <td><?php echo strtoupper($row->bedspace) ?></td>
+                                                        <td><?php echo $row->room_name ?></td>
+                                                        <td><?php echo $row->prog_abbr ?></td>
+                                                        <td><?php echo $row->current_level ?></td>
+                                                          <td><?php echo $row->datereserved; ?></td>
+                                                        <td><?php echo $row->status ?></td>
+                                                        <td>
+                                                         <a href="<?php echo site_url('accomodations/revoke/'.$row->hostelid."/".$row->user_id."/".$row->bedspaceid); ?>">Revoke</a> <?php }  ?></td>
+                                                    </tr>
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php $this->load->view('incs/footer'); ?>
+        </div>
+    </div>
+    <script src="<?php echo base_url() ?>assets/bundles/lib.vendor.bundle.js" type="e27f9daa9c2f25670b2c3761-text/javascript"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="e27f9daa9c2f25670b2c3761-text/javascript"></script>
+    <script src="<?php echo base_url() ?>assets/plugins/dropify/js/dropify.min.js" type="e27f9daa9c2f25670b2c3761-text/javascript"></script>
+    <script src="<?php echo base_url() ?>assets/bundles/summernote.bundle.js" type="e27f9daa9c2f25670b2c3761-text/javascript"></script>
+    <script src="<?php echo base_url() ?>assets/js/core.js" type="e27f9daa9c2f25670b2c3761-text/javascript"></script>
+    <script src="<?php echo base_url() ?>assets/js/form/dropify.js" type="e27f9daa9c2f25670b2c3761-text/javascript">
+    </script>
+    <script src="<?php echo base_url() ?>assets/js/page/summernote.js" type="e27f9daa9c2f25670b2c3761-text/javascript">
+    </script>
+    <script src="<?php echo base_url() ?>assets/js/rocket-loader.min.js" data-cf-settings="e27f9daa9c2f25670b2c3761-|49" defer=""></script>
+</body>
+
+</html>
